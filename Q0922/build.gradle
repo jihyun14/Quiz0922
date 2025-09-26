@@ -19,24 +19,44 @@ repositories {
 }
 
 dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// 웹 서비스를 구축하는 데 필요한 핵심 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	
+	// H2 데이터베이스 라이브러리
+	runtimeOnly 'com.h2database:h2'
+	
+	// 개발 시 코드 변경을 감지하고 애플리케이션을 자동으로 다시 시작
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	// 템플릿 엔진인 타임리프를 사용하기 위한 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-    compileOnly 'org.projectlombok:lombok' 
-    annotationProcessor 'org.projectlombok:lombok' 
-    runtimeOnly 'com.h2database:h2' 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' 
-    testImplementation 'org.junit.jupiter:junit-jupiter' 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	
+	// lombok 라이브러리
+	compileOnly 'org.projectlombok:lombok' 
+	annotationProcessor 'org.projectlombok:lombok' 
+	
+	// JPA를 사용하기 위한 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' 
+	
+	// JUnit 테스트 프레임워크 관련 라이브러리
+	testImplementation 'org.junit.jupiter:junit-jupiter' 
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	// 사용자 입력 데이터의 유효성을 검사하는 데 필요한 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	// 시큐리티
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     
-     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+   
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
