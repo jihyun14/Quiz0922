@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 등록/수정</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        .form-container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        h1 { text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>상품 등록</h1>
+    <form action="/products/new" method="post">
+        <div class="form-group">
+            <label for="name">상품명</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">간략 설명</label>
+            <input type="text" id="description" name="description">
+        </div>
+        <div class="form-group">
+            <label for="memoryType">기억 종류</label>
+            <select id="memoryType" name="memoryType">
+                <option value="GENUINE">진품</option>
+                <option value="REPLICA">복제품</option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="originalOwner">원래 소유자</label>
+            <input type="text" id="originalOwner" name="originalOwner">
+        </div>
+        <div class="form-group">
+            <label for="emotionLevel">감정 레벨</label>
+            <input type="number" id="emotionLevel" name="emotionLevel">
+        </div>
+        <div class="form-group">
+            <label for="rarityScore">희귀도 점수</label>
+            <input type="number" id="rarityScore" name="rarityScore">
+        </div>
+        <div class="form-group">
+            <label for="magicalPower">마법 능력</label>
+            <input type="text" id="magicalPower" name="magicalPower">
+        </div>
+        <div class="form-group">
+            <label for="price">가격</label>
+            <input type="number" id="price" name="price" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">재고</label>
+            <input type="number" id="stock" name="stock" required>
+        </div>
+        <div class="form-group">
+            <label for="detailedDescription">상세 설명</label>
+            <textarea id="detailedDescription" name="detailedDescription" rows="5"></textarea>
+        </div>
+        <button type="submit">저장하기</button>
+    </form>
+</div>
+
+</body>
+</html>
