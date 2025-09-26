@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지 - Memory Treasures</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="bg-light">
     <!-- 네비게이션 -->
@@ -17,170 +17,30 @@
                 <a class="nav-link" th:href="@{/}">홈</a>
                 <a class="nav-link" th:href="@{/products}">상품</a>
                 <a class="nav-link" th:href="@{/cart}">장바구니</a>
-                <span class="navbar-text me-3" sec:authentication="name"></span>
-                <!-- <form th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-outline-light btn-sm">로그아웃</button>
-                </form> --> <!-- 위는 세션 기반의 로그아웃 -->
+             
 				<button id="logout-btn" class="btn btn-outline-light btn-sm">로그아웃</button>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
-            <!-- 사이드바 -->
-            <div class="col-md-3">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <!-- 프로필 정보 -->
-                        <div class="mb-3">
-                            <div class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
-                                 style="width: 80px; height: 80px; border-radius: 50%; font-size: 2rem;" 
-                                 th:text="${user.characterType.avatar}">🐱</div>
-                        </div>
-                        <h5 th:text="${user.nickname}">사용자명</h5>
-                        <p class="text-muted small" th:text="${user.characterType.description}">캐릭터 설명</p>
-                        <span class="badge bg-success">레벨 5</span>
-                    </div>
-                </div>
-
-                <!-- 통계 -->
-                <div class="card shadow-sm mt-3">
-                    <div class="card-body">
-                        <h6 class="card-title">📊 나의 통계</h6>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>구매 기억:</span>
-                            <strong th:text="${userStats.totalPurchases} + '개'">12개</strong>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>적립 포인트:</span>
-                            <strong th:text="${userStats.totalPoints} + 'P'">2,450P</strong>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span>가입일:</span>
-                            <strong th:text="${#temporals.format(user.createdAt, 'yyyy.MM.dd')}">2025.09.01</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 메인 콘텐츠 -->
-            <div class="col-md-9">
-                <!-- 프로필 수정 -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">👤 프로필 정보</h5>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/profile/update}" th:object="${userUpdateDTO}" method="post">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">아이디</label>
-                                        <input type="text" class="form-control" th:value="${user.username}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="nickname" class="form-label">닉네임</label>
-                                        <input type="text" class="form-control" th:field="*{nickname}" id="nickname">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">이메일</label>
-                                        <input type="email" class="form-control" th:field="*{email}" id="email">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">캐릭터</label>
-                                        <input type="text" class="form-control" th:value="${user.characterType.displayName}" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">정보 수정</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- 주문 내역 -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">📦 최근 주문 내역</h5>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${#lists.isEmpty(recentOrders)}" class="text-center text-muted py-4">
-                            <p>아직 주문한 기억이 없어요!</p>
-                            <a th:href="@{/products}" class="btn btn-primary">기억 구경하러 가기</a>
-                        </div>
-                        
-                        <div th:each="order : ${recentOrders}" class="border-bottom pb-3 mb-3">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>주문번호:</strong> <span th:text="${order.orderNumber}">MT001</span><br>
-                                    <strong>주문일:</strong> <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">2025-09-20 14:30</span>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge" 
-                                          th:classappend="${order.status.name() == 'COMPLETED'} ? 'bg-success' : 
-                                                         (${order.status.name() == 'SHIPPING'} ? 'bg-warning' : 'bg-secondary')"
-                                          th:text="${order.status.description}">배송완료</span><br>
-                                    <strong th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA')} + '원'">45,000원</strong>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <div th:each="item : ${order.orderItems}" class="small text-muted">
-                                    • <span th:text="${item.productName}">상품명</span> 
-                                    (<span th:text="${item.quantity}">1</span>개)
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div th:if="${!#lists.isEmpty(recentOrders)}" class="text-center">
-                            <a th:href="@{/profile/orders}" class="btn btn-outline-primary">전체 주문 보기</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 포인트 내역 -->
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h5 class="mb-0">💰 포인트 내역</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>현재 보유 포인트</span>
-                            <h4 class="text-primary" th:text="${userStats.totalPoints} + 'P'">2,450P</h4>
-                        </div>
-                        
-                        <div th:each="point : ${recentPointHistory}" class="d-flex justify-content-between py-2">
-                            <div>
-                                <span th:text="${point.description}">구매 적립</span><br>
-                                <small class="text-muted" th:text="${#temporals.format(point.createdAt, 'MM-dd HH:mm')}">09-20 14:30</small>
-                            </div>
-                            <span class="fw-bold" 
-                                  th:classappend="${point.amount > 0} ? 'text-success' : 'text-danger'"
-                                  th:text="${point.amount > 0 ? '+' : ''} + ${point.amount} + 'P'">+450P</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+	<script type="module">
+		// import { TokenManager } from './js/token.js'; // ❌ 제거
+		// import { tokenApi } from './js/tokenApi.js'; // ❌ 제거
 		
-		// JWT 로그아웃은 기본적으로 클라이언트가 토큰을 삭제하는 것이기 때문에, 로그아웃 후 클라이언트에서 메시지를 표시
-		document.getElementById("logout-btn").addEventListener("click", function() {
-		// JWT 삭제
-		localStorage.removeItem("jwtToken");
+		// ❌ loadUserProfile 함수 및 window.addEventListener("load", loadUserProfile); 모두 제거
+		// ...
 
-		// 로그아웃 메시지 전달하면서 로그인 페이지로 이동
-		 window.location.href = "/login?logout=true";
-	});
+	    // ✅ 로그아웃은 토큰만 삭제하면 되므로, 이 로직은 유지하거나, 서버 로그아웃으로 전환
+		document.getElementById("logout-btn").addEventListener("click", function() {
+	        // HttpOnly 쿠키를 사용하면 JS에서 토큰을 직접 삭제할 수 없으므로, 
+	        // 로그아웃 시 서버에 쿠키 삭제 요청(POST /logout)을 보내야 합니다.
+	        // 또는 쿠키 만료 시간을 0으로 설정하는 JS 코드를 사용할 수도 있지만, 서버가 권장됨.
+	        
+	        // **임시 방편:** 토큰 삭제 없이 로그인 페이지로 이동
+	        window.location.href = "/login?logout=true"; 
+		});
+	</script>
+		
 		
 	</script>
 </body>

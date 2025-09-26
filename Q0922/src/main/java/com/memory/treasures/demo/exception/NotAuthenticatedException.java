@@ -1,8 +1,4 @@
-package com.memory.treasures.exception;
-
-import java.util.Map;
-
-
+package com.memory.treasures.demo.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,10 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class SignupValidationException extends RuntimeException{
+public class NotAuthenticatedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
-	private Map<String, String> errors;
-
+	private String message;
 }

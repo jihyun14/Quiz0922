@@ -1,4 +1,4 @@
-package com.memory.treasures.security;
+package com.memory.treasures.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

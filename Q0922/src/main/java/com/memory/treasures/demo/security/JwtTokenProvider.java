@@ -1,5 +1,6 @@
-package com.memory.treasures.security;
+package com.memory.treasures.demo.security;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,17 +30,15 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-	 private static final String SECRET_KEY = "4261656C64756E67";
+	 private static final String SECRET_KEY = "thisIsAVeryLongSecretKeyForJwtToken123456";
 
 	
 	private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000L; // 1시간
-    private final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000L; // 7일
-
+    
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(this.SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+    	return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
-
+ 
 
 	// Access Token 생성
     public String generateAccessToken(Authentication authentication) {
@@ -60,9 +59,9 @@ public class JwtTokenProvider {
     }
 	
     // Refresh Token 생성 (별도 정보 없이 만료 시간만 길게)
-    public String generateRefreshToken(Authentication authentication) {
+    public String generateRefreshToken(Authentication authentication , int days) {
     	long now = (new Date()).getTime();
-    	Date validity = new Date(now + REFRESH_TOKEN_VALIDITY);
+    	Date validity = new Date(now + days * 24L * 60 * 60 * 1000);
     	
     	return Jwts.builder()
     			.subject(authentication.getName())

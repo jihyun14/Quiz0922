@@ -1,4 +1,4 @@
-package com.memory.treasures.user;
+package com.memory.treasures.demo.user;
 
 
 import jakarta.validation.constraints.AssertTrue;

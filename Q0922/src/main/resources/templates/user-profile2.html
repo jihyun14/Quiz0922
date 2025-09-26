@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - Memory Treasures</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 2rem;
+        }
+        .loading-spinner {
+            min-height: 200px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-light">
+	    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">🏪 Memory Treasures</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">홈</a>
+                <a class="nav-link" href="/products">상품</a>
+                <a class="nav-link" href="/cart">장바구니</a>
+                <span class="navbar-text me-3" id="username-display">로딩중...</span>
+                <button id="logout-btn" class="btn btn-outline-light btn-sm">로그아웃</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 로딩 스피너 -->
+    <div class="container" id="loading-container">
+        <div class="text-center loading-spinner d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">로딩중...</span>
+            </div>
+            <span class="ms-3">프로필을 불러오는 중...</span>
+        </div>
+    </div>
+
+    <!-- 메인 컨텐츠 -->
+    <div class="container d-none" id="main-content">
+        <div class="row">
+            <!-- 사이드바 -->
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <!-- 프로필 정보 -->
+                        <div class="mb-3">
+                            <div class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" id="user-avatar">
+                                👤
+                            </div>
+                        </div>
+                        <h5 id="user-nickname">사용자명</h5>
+                        <p class="text-muted small" id="user-character-desc">캐릭터 설명</p>
+                        <span class="badge bg-success" id="user-level">레벨 5</span>
+                    </div>
+                </div>
+
+                <!-- 통계 -->
+                <div class="card shadow-sm mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">📊 나의 통계</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>구매 기억:</span>
+                            <strong id="total-purchases">0개</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>적립 포인트:</span>
+                            <strong id="total-points">0P</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>가입일:</span>
+                            <strong id="join-date">-</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 메인 콘텐츠 -->
+            <div class="col-md-9">
+                <!-- 프로필 수정 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">👤 프로필 정보</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="profile-update-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">아이디</label>
+                                        <input type="text" class="form-control" id="profile-username" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="profile-nickname" class="form-label">닉네임</label>
+                                        <input type="text" class="form-control" id="profile-nickname">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="profile-email" class="form-label">이메일</label>
+                                        <input type="email" class="form-control" id="profile-email">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">캐릭터</label>
+                                        <input type="text" class="form-control" id="profile-character" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">정보 수정</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 주문 내역 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">📦 최근 주문 내역</h5>
+                    </div>
+                    <div class="card-body" id="orders-container">
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                            <span class="ms-2">주문 내역을 불러오는 중...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 포인트 내역 -->
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">💰 포인트 내역</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>현재 보유 포인트</span>
+                            <h4 class="text-primary" id="current-points">0P</h4>
+                        </div>
+                        <div id="point-history-container">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <span class="ms-2">포인트 내역을 불러오는 중...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 에러 메시지 -->
+    <div class="container d-none" id="error-container">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">오류가 발생했습니다</h4>
+            <p id="error-message">프로필을 불러올 수 없습니다. 다시 로그인해주세요.</p>
+            <hr>
+            <div class="d-flex justify-content-center">
+                <a href="/login" class="btn btn-primary">로그인 페이지로 이동</a>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        // JWT 토큰 관리
+        class TokenManager {
+            static getAccessToken() {
+                return localStorage.getItem('accessToken');
+            }
+            
+            static getRefreshToken() {
+                return localStorage.getItem('refreshToken');
+            }
+            
+            static setTokens(accessToken, refreshToken) {
+                localStorage.setItem('accessToken', accessToken);
+                if (refreshToken) {
+                    localStorage.setItem('refreshToken', refreshToken);
+                }
+            }
+            
+            static clearTokens() {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+            }
+            
+            static isLoggedIn() {
+                return !!this.getAccessToken();
+            }
+        }
+
+        // API 호출 함수
+        async function apiCall(url, options = {}) {
+            const token = TokenManager.getAccessToken();
+            
+            if (!token) {
+                throw new Error('로그인이 필요합니다.');
+            }
+
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            };
+
+            const response = await fetch(url, { ...defaultOptions, ...options });
+
+            if (response.status === 401) {
+                // 토큰 만료 시 리프레시 시도
+                const refreshed = await refreshToken();
+                if (!refreshed) {
+                    TokenManager.clearTokens();
+                    window.location.href = '/login?expired=true';
+                    return;
+                }
+                
+                // 재시도
+                const newToken = TokenManager.getAccessToken();
+                const retryResponse = await fetch(url, {
+                    ...defaultOptions,
+                    ...options,
+                    headers: {
+                        ...defaultOptions.headers,
+                        'Authorization': `Bearer ${newToken}`,
+                        ...options.headers
+                    }
+                });
+                
+                if (!retryResponse.ok) {
+                    throw new Error(`API 호출 실패: ${retryResponse.status}`);
+                }
+                
+                return retryResponse.json();
+            }
+
+            if (!response.ok) {
+                throw new Error(`API 호출 실패: ${response.status}`);
+            }
+
+            return response.json();
+        }
+
+        // 토큰 리프레시
+        async function refreshToken() {
+            const refreshToken = TokenManager.getRefreshToken();
+            if (!refreshToken) return false;
+
+            try {
+                const response = await fetch('/api/auth/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ refreshToken })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    TokenManager.setTokens(data.accessToken, data.refreshToken);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('토큰 리프레시 실패:', error);
+                return false;
+            }
+        }
+
+        // 유틸리티 함수들
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('ko-KR');
+        }
+
+        function formatDateTime(dateString) {
+            return new Date(dateString).toLocaleString('ko-KR');
+        }
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('ko-KR').format(number);
+        }
+
+        function getStatusBadgeClass(status) {
+            const statusClasses = {
+                'COMPLETED': 'bg-success',
+                'SHIPPING': 'bg-warning text-dark',
+                'PROCESSING': 'bg-info',
+                'CANCELLED': 'bg-danger',
+                'PENDING': 'bg-secondary'
+            };
+            return statusClasses[status] || 'bg-secondary';
+        }
+
+        // 화면 상태 관리
+        function showLoading() {
+            document.getElementById('loading-container').classList.remove('d-none');
+            document.getElementById('main-content').classList.add('d-none');
+            document.getElementById('error-container').classList.add('d-none');
+        }
+
+        function showContent() {
+            document.getElementById('loading-container').classList.add('d-none');
+            document.getElementById('main-content').classList.remove('d-none');
+            document.getElementById('main-content').classList.add('fade-in');
+            document.getElementById('error-container').classList.add('d-none');
+        }
+
+        function showError(message = '프로필을 불러올 수 없습니다.') {
+            document.getElementById('loading-container').classList.add('d-none');
+            document.getElementById('main-content').classList.add('d-none');
+            document.getElementById('error-container').classList.remove('d-none');
+            document.getElementById('error-message').textContent = message;
+        }
+
+        // 사용자 프로필 정보 로드 및 렌더링
+        async function loadUserProfile() {
+            try {
+                const profileData = await apiCall('/api/auth/profile');
+                
+                // 네비게이션 사용자명
+                document.getElementById('username-display').textContent = profileData.nickname;
+                
+                // 사이드바 프로필
+                const avatar = profileData.characterType?.avatar || '👤';
+                document.getElementById('user-avatar').textContent = avatar;
+                document.getElementById('user-nickname').textContent = profileData.nickname;
+                document.getElementById('user-character-desc').textContent = profileData.characterType?.description || '';
+                document.getElementById('user-level').textContent = `레벨 ${profileData.level || 5}`;
+                
+                // 프로필 폼
+                document.getElementById('profile-username').value = profileData.username;
+                document.getElementById('profile-nickname').value = profileData.nickname;
+                document.getElementById('profile-email').value = profileData.email || '';
+                document.getElementById('profile-character').value = profileData.characterType?.displayName || '';
+                
+                // 가입일
+                document.getElementById('join-date').textContent = formatDate(profileData.createdAt);
+                
+                return profileData;
+            } catch (error) {
+                console.error('프로필 로드 실패:', error);
+                throw error;
+            }
+        }
+
+        // 사용자 통계 로드
+        async function loadUserStats() {
+            try {
+                const statsData = await apiCall('/api/profile/stats');
+                
+                document.getElementById('total-purchases').textContent = `${statsData.totalPurchases}개`;
+                document.getElementById('total-points').textContent = `${formatNumber(statsData.totalPoints)}P`;
+                document.getElementById('current-points').textContent = `${formatNumber(statsData.totalPoints)}P`;
+                
+                return statsData;
+            } catch (error) {
+                console.error('통계 로드 실패:', error);
+                // 통계는 필수가 아니므로 기본값 설정
+                document.getElementById('total-purchases').textContent = '0개';
+                document.getElementById('total-points').textContent = '0P';
+                document.getElementById('current-points').textContent = '0P';
+            }
+        }
+
+        // 주문 내역 로드 및 렌더링
+        async function loadRecentOrders() {
+            try {
+                const ordersData = await apiCall('/api/profile/orders');
+                const container = document.getElementById('orders-container');
+                
+                if (!ordersData || ordersData.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <p>아직 주문한 기억이 없어요!</p>
+                            <a href="/products" class="btn btn-primary">기억 구경하러 가기</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const ordersHtml = ordersData.map(order => `
+                    <div class="border-bottom pb-3 mb-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>주문번호:</strong> ${order.orderNumber}<br>
+                                <strong>주문일:</strong> ${formatDateTime(order.createdAt)}
+                            </div>
+                            <div class="text-end">
+                                <span class="badge ${getStatusBadgeClass(order.status)}">${order.statusDescription || order.status}</span><br>
+                                <strong>${formatNumber(order.totalAmount)}원</strong>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            ${order.orderItems ? order.orderItems.map(item => 
+                                `<div class="small text-muted">• ${item.productName} (${item.quantity}개)</div>`
+                            ).join('') : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                container.innerHTML = ordersHtml + `
+                    <div class="text-center">
+                        <a href="/profile/orders" class="btn btn-outline-primary">전체 주문 보기</a>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('주문 내역 로드 실패:', error);
+                document.getElementById('orders-container').innerHTML = `
+                    <div class="alert alert-warning">
+                        주문 내역을 불러올 수 없습니다.
+                    </div>
+                `;
+            }
+        }
+
+        // 포인트 내역 로드 및 렌더링
+        async function loadPointHistory() {
+            try {
+                const pointData = await apiCall('/api/profile/points');
+                const container = document.getElementById('point-history-container');
+                
+                if (!pointData || pointData.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted">
+                            포인트 내역이 없습니다.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const pointsHtml = pointData.map(point => `
+                    <div class="d-flex justify-content-between py-2">
+                        <div>
+                            <span>${point.description}</span><br>
+                            <small class="text-muted">${new Date(point.createdAt).toLocaleString('ko-KR', {
+                                month: '2-digit', 
+                                day: '2-digit', 
+                                hour: '2-digit', 
+                                minute: '2-digit'
+                            })}</small>
+                        </div>
+                        <span class="fw-bold ${point.amount > 0 ? 'text-success' : 'text-danger'}">
+                            ${point.amount > 0 ? '+' : ''}${formatNumber(point.amount)}P
+                        </span>
+                    </div>
+                `).join('');
+
+                container.innerHTML = pointsHtml;
+            } catch (error) {
+                console.error('포인트 내역 로드 실패:', error);
+                document.getElementById('point-history-container').innerHTML = `
+                    <div class="alert alert-warning">
+                        포인트 내역을 불러올 수 없습니다.
+                    </div>
+                `;
+            }
+        }
+
+        // 프로필 업데이트
+        async function updateProfile(formData) {
+            try {
+                const result = await apiCall('/api/profile/update', {
+                    method: 'PUT',
+                    body: JSON.stringify(formData)
+                });
+                
+                return result;
+            } catch (error) {
+                console.error('프로필 업데이트 실패:', error);
+                throw error;
+            }
+        }
+
+        // 초기화 함수
+        async function initializePage() {
+            // 로그인 체크
+            if (!TokenManager.isLoggedIn()) {
+                window.location.href = '/login';
+                return;
+            }
+
+            showLoading();
+
+            try {
+                // 병렬로 데이터 로드
+                await Promise.all([
+                    loadUserProfile(),
+                    loadUserStats(),
+                    loadRecentOrders(),
+                    loadPointHistory()
+                ]);
+                
+                showContent();
+            } catch (error) {
+                console.error('페이지 초기화 실패:', error);
+                showError(error.message || '페이지를 불러올 수 없습니다.');
+            }
+        }
+
+        // 이벤트 리스너들
+        document.addEventListener('DOMContentLoaded', function() {
+            // 페이지 초기화
+            initializePage();
+
+            // 로그아웃 버튼
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                TokenManager.clearTokens();
+                window.location.href = '/login?logout=true';
+            });
+
+            // 프로필 업데이트 폼
+            document.getElementById('profile-update-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    nickname: document.getElementById('profile-nickname').value,
+                    email: document.getElementById('profile-email').value
+                };
+
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>수정중...';
+                    
+                    await updateProfile(formData);
+                    
+                    // 성공 메시지
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+                    alert.innerHTML = `
+                        프로필이 성공적으로 업데이트되었습니다!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    e.target.appendChild(alert);
+                    
+                    // 사이드바 닉네임도 업데이트
+                    document.getElementById('user-nickname').textContent = formData.nickname;
+                    document.getElementById('username-display').textContent = formData.nickname;
+                    
+                    // 3초 후 알림 자동 제거
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 3000);
+                    
+                } catch (error) {
+                    // 에러 메시지
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                    alert.innerHTML = `
+                        프로필 업데이트 중 오류가 발생했습니다: ${error.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    e.target.appendChild(alert);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            });
+        });
+
+        // 페이지 새로고침 시 토큰 확인
+        window.addEventListener('beforeunload', function() {
+            if (!TokenManager.isLoggedIn()) {
+                // 토큰이 없으면 로그인 페이지로 리다이렉트 예약
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 100);
+            }
+        });
+    </script>
+
+    <!-- Bootstrap JS (알림 기능용) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
