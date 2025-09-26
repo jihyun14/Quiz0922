@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+    <!-- 네비게이션 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{/}">🏪 Memory Treasures Admin</a>
@@ -23,31 +24,35 @@
 
     <div class="container-fluid">
         <div class="row">
+            <!-- 사이드바 -->
             <div class="col-md-2">
                 <div class="list-group">
-                    <a href="#dashboard" class="list-group-item list-group-item-action active"
+                    <a href="#dashboard" class="list-group-item list-group-item-action active" 
                        data-bs-toggle="tab">📊 대시보드</a>
-                    <a href="#products" class="list-group-item list-group-item-action"
+                    <a href="#products" class="list-group-item list-group-item-action" 
                        data-bs-toggle="tab">📦 상품 관리</a>
-                    <a href="#orders" class="list-group-item list-group-item-action"
+                    <a href="#orders" class="list-group-item list-group-item-action" 
                        data-bs-toggle="tab">🛍️ 주문 관리</a>
-                    <a href="#users" class="list-group-item list-group-item-action"
+                    <a href="#users" class="list-group-item list-group-item-action" 
                        data-bs-toggle="tab">👥 사용자 관리</a>
-                    <a href="#nuryeong" class="list-group-item list-group-item-action"
+                    <a href="#nuryeong" class="list-group-item list-group-item-action" 
                        data-bs-toggle="tab">🐕 누렁이 관리</a>
                 </div>
             </div>
 
+            <!-- 메인 콘텐츠 -->
             <div class="col-md-10">
                 <div class="tab-content">
+                    <!-- 대시보드 -->
                     <div class="tab-pane fade show active" id="dashboard">
                         <h2 class="mb-4">📊 Memory Treasures 관리자 대시보드</h2>
-
+                        
+                        <!-- 통계 카드 -->
                         <div class="row mb-4">
                             <div class="col-md-3">
                                 <div class="card bg-primary text-white">
                                     <div class="card-body">
-                                        <h4 th:text="${dashboardStats?.totalUsers != null} ? ${dashboardStats.totalUsers} : '0'">156</h4>
+                                        <h4 th:text="${dashboardStats.totalUsers}">156</h4>
                                         <p class="card-text">총 사용자</p>
                                     </div>
                                 </div>
@@ -55,7 +60,7 @@
                             <div class="col-md-3">
                                 <div class="card bg-success text-white">
                                     <div class="card-body">
-                                        <h4 th:text="${dashboardStats?.totalProducts != null} ? ${dashboardStats.totalProducts} : '0'">234</h4>
+                                        <h4 th:text="${dashboardStats.totalProducts}">234</h4>
                                         <p class="card-text">총 상품</p>
                                     </div>
                                 </div>
@@ -63,7 +68,7 @@
                             <div class="col-md-3">
                                 <div class="card bg-warning text-white">
                                     <div class="card-body">
-                                        <h4 th:text="${dashboardStats?.totalOrders != null} ? ${dashboardStats.totalOrders} : '0'">89</h4>
+                                        <h4 th:text="${dashboardStats.totalOrders}">89</h4>
                                         <p class="card-text">총 주문</p>
                                     </div>
                                 </div>
@@ -71,13 +76,14 @@
                             <div class="col-md-3">
                                 <div class="card bg-info text-white">
                                     <div class="card-body">
-                                        <h4 th:text="${dashboardStats?.totalRevenue != null} ? ${#numbers.formatInteger(dashboardStats.totalRevenue, 0, 'COMMA')} + '원' : '0원'">2,340,000원</h4>
+                                        <h4 th:text="${#numbers.formatInteger(dashboardStats.totalRevenue, 0, 'COMMA')} + '원'">2,340,000원</h4>
                                         <p class="card-text">총 매출</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- 오늘의 누렁이 상태 -->
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5>🐕 오늘의 누렁이 상태</h5>
@@ -85,37 +91,38 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong>기분:</strong> <span th:text="${nuryeongStatus?.mood != null} ? ${nuryeongStatus.mood} : '알 수 없음'">배고픔</span> </p>
-                                        <p><strong>배고픔 지수:</strong> <span th:text="${nuryeongStatus?.hungerLevel != null} ? ${nuryeongStatus.hungerLevel} : '0'">75</span>/100</p>
-                                        <p><strong>소화 상태:</strong> <span th:text="${nuryeongStatus?.digestionStatus != null} ? ${nuryeongStatus.digestionStatus} : '알 수 없음'">소화 중</span></p>
+                                        <p><strong>기분:</strong> <span th:text="${nuryeongStatus.mood}">배고픔</span> 😋</p>
+                                        <p><strong>배고픔 지수:</strong> <span th:text="${nuryeongStatus.hungerLevel}">75</span>/100</p>
+                                        <p><strong>소화 상태:</strong> <span th:text="${nuryeongStatus.digestionStatus}">소화 중</span></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>오늘 토해낸 기억:</strong> <span th:text="${nuryeongStatus?.todayVomitCount != null} ? ${nuryeongStatus.todayVomitCount} : '0'">23</span>개</p>
-                                        <p><strong>생성된 상품:</strong> <span th:text="${nuryeongStatus?.todayProductCount != null} ? ${nuryeongStatus.todayProductCount} : '0'">47</span>개</p>
+                                        <p><strong>오늘 토해낸 기억:</strong> <span th:text="${nuryeongStatus.todayVomitCount}">23</span>개</p>
+                                        <p><strong>생성된 상품:</strong> <span th:text="${nuryeongStatus.todayProductCount}">47</span>개</p>
                                         <button class="btn btn-primary btn-sm" onclick="feedNuryeong()">🍯 기억 먹이기</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- 최근 활동 -->
                         <div class="card">
                             <div class="card-header">
                                 <h5>📋 최근 활동</h5>
                             </div>
                             <div class="card-body">
-                                <div th:if="${recentActivities != null and not #lists.isEmpty(recentActivities)}" class="list-group list-group-flush">
+                                <div class="list-group list-group-flush">
                                     <div class="list-group-item" th:each="activity : ${recentActivities}">
                                         <div class="d-flex justify-content-between">
-                                            <span th:text="${activity?.description}">새 주문이 접수되었습니다</span>
-                                            <small th:text="${activity?.timestamp != null} ? ${#temporals.format(activity.timestamp, 'HH:mm')} : '시간 없음'">14:30</small>
+                                            <span th:text="${activity.description}">새 주문이 접수되었습니다</span>
+                                            <small th:text="${#temporals.format(activity.timestamp, 'HH:mm')}">14:30</small>
                                         </div>
                                     </div>
                                 </div>
-                                <p th:if="${recentActivities == null or #lists.isEmpty(recentActivities)}" class="text-muted text-center">최근 활동 기록이 없습니다.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 상품 관리 -->
                     <div class="tab-pane fade" id="products">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2>📦 상품 관리</h2>
@@ -126,7 +133,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <div th:if="${products != null and not #lists.isEmpty(products)}" class="table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -141,37 +148,37 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="product : ${products}">
-                                                <td th:text="${product?.id}">1</td>
-                                                <td th:text="${product?.name}">토심이의 첫 일기장</td>
-                                                <td th:text="${product?.originalOwner}">토심이</td>
-                                                <td th:text="${product?.price != null} ? ${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원' : '가격 미정'">45,000원</td>
-                                                <td th:text="${product?.stock != null} ? ${product.stock} : '0'">1</td>
+                                                <td th:text="${product.id}">1</td>
+                                                <td th:text="${product.name}">토심이의 첫 일기장</td>
+                                                <td th:text="${product.originalOwner}">토심이</td>
+                                                <td th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'">45,000원</td>
+                                                <td th:text="${product.stock}">1</td>
                                                 <td>
-                                                    <span class="badge"
-                                                          th:classappend="${product?.stock != null and product.stock > 0} ? 'bg-success' : 'bg-danger'"
-                                                          th:text="${product?.stock != null and product.stock > 0} ? '판매중' : '품절'">판매중</span>
+                                                    <span class="badge" 
+                                                          th:classappend="${product.stock > 0} ? 'bg-success' : 'bg-danger'"
+                                                          th:text="${product.stock > 0} ? '판매중' : '품절'">판매중</span>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-primary me-1"
-                                                            th:onclick="'editProduct(' + ${product?.id} + ')'">수정</button>
-                                                    <button class="btn btn-sm btn-outline-danger"
-                                                            th:onclick="'deleteProduct(' + ${product?.id} + ')'">삭제</button>
+                                                    <button class="btn btn-sm btn-outline-primary me-1" 
+                                                            th:onclick="'editProduct(' + ${product.id} + ')'">수정</button>
+                                                    <button class="btn btn-sm btn-outline-danger" 
+                                                            th:onclick="'deleteProduct(' + ${product.id} + ')'">삭제</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <p th:if="${products == null or #lists.isEmpty(products)}" class="text-muted text-center">등록된 상품이 없습니다.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 주문 관리 -->
                     <div class="tab-pane fade" id="orders">
                         <h2 class="mb-4">🛍️ 주문 관리</h2>
 
                         <div class="card">
                             <div class="card-body">
-                                <div th:if="${orders != null and not #lists.isEmpty(orders)}" class="table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -185,38 +192,38 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="order : ${orders}">
-                                                <td th:text="${order?.orderNumber}">MT001</td>
-                                                <td th:text="${order?.user?.nickname}">탱고</td>
-                                                <td th:text="${order?.createdAt != null} ? ${#temporals.format(order.createdAt, 'MM-dd HH:mm')} : '날짜 없음'">09-20 14:30</td>
-                                                <td th:text="${order?.totalAmount != null} ? ${#numbers.formatInteger(order.totalAmount, 0, 'COMMA')} + '원' : '0원'">45,000원</td>
+                                                <td th:text="${order.orderNumber}">MT001</td>
+                                                <td th:text="${order.user.nickname}">탱고</td>
+                                                <td th:text="${#temporals.format(order.createdAt, 'MM-dd HH:mm')}">09-20 14:30</td>
+                                                <td th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA')} + '원'">45,000원</td>
                                                 <td>
-                                                    <select class="form-select form-select-sm"
-                                                            th:onchange="'updateOrderStatus(' + ${order?.id} + ', this.value)'">
-                                                        <option th:each="status : ${T(com.example.OrderStatus).values()}"
-                                                                th:value="${status}"
+                                                    <select class="form-select form-select-sm" 
+                                                            th:onchange="'updateOrderStatus(' + ${order.id} + ', this.value)'">
+                                                        <option th:each="status : ${T(com.example.OrderStatus).values()}" 
+                                                                th:value="${status}" 
                                                                 th:text="${status.description}"
-                                                                th:selected="${order?.status != null and status == order.status}">상태</option>
+                                                                th:selected="${status == order.status}">상태</option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-primary"
-                                                            th:onclick="'viewOrderDetail(' + ${order?.id} + ')'">상세</button>
+                                                    <button class="btn btn-sm btn-outline-primary" 
+                                                            th:onclick="'viewOrderDetail(' + ${order.id} + ')'">상세</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <p th:if="${orders == null or #lists.isEmpty(orders)}" class="text-muted text-center">주문 내역이 없습니다.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 사용자 관리 -->
                     <div class="tab-pane fade" id="users">
                         <h2 class="mb-4">👥 사용자 관리</h2>
 
                         <div class="card">
                             <div class="card-body">
-                                <div th:if="${users != null and not #lists.isEmpty(users)}" class="table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
@@ -231,27 +238,27 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="user : ${users}">
-                                                <td th:text="${user?.id}">1</td>
-                                                <td th:text="${user?.username}">tango</td>
-                                                <td th:text="${user?.nickname}">탱고</td>
-                                                <td th:text="${user?.characterType?.displayName}">탱고</td>
-                                                <td th:text="${user?.createdAt != null} ? ${#temporals.format(user.createdAt, 'yyyy-MM-dd')} : '날짜 없음'">2025-09-01</td>
-                                                <td th:text="${user?.orderCount}">5</td>
+                                                <td th:text="${user.id}">1</td>
+                                                <td th:text="${user.username}">tango</td>
+                                                <td th:text="${user.nickname}">탱고</td>
+                                                <td th:text="${user.characterType.displayName}">탱고</td>
+                                                <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">2025-09-01</td>
+                                                <td th:text="${user.orderCount}">5</td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-primary me-1"
-                                                            th:onclick="'viewUser(' + ${user?.id} + ')'">상세</button>
-                                                    <button class="btn btn-sm btn-outline-warning"
-                                                            th:onclick="'suspendUser(' + ${user?.id} + ')'">정지</button>
+                                                    <button class="btn btn-sm btn-outline-primary me-1" 
+                                                            th:onclick="'viewUser(' + ${user.id} + ')'">상세</button>
+                                                    <button class="btn btn-sm btn-outline-warning" 
+                                                            th:onclick="'suspendUser(' + ${user.id} + ')'">정지</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <p th:if="${users == null or #lists.isEmpty(users)}" class="text-muted text-center">등록된 사용자가 없습니다.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 누렁이 관리 -->
                     <div class="tab-pane fade" id="nuryeong">
                         <h2 class="mb-4">🐕 누렁이 관리 센터</h2>
 
@@ -266,15 +273,15 @@
                                             <div class="mb-3">
                                                 <label class="form-label">기억 종류:</label>
                                                 <select name="memoryType" class="form-select">
-                                                    <option value="CHILDHOOD">어린시절 기억 </option>
-                                                    <option value="FRIENDSHIP">우정의 기억 </option>
-                                                    <option value="LOVE">사랑의 기억 </option>
+                                                    <option value="CHILDHOOD">어린시절 기억 🧸</option>
+                                                    <option value="FRIENDSHIP">우정의 기억 👫</option>
+                                                    <option value="LOVE">사랑의 기억 💕</option>
                                                     <option value="ADVENTURE">모험의 기억 🗺️</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">수량:</label>
-                                                <input type="number" name="quantity" class="form-control"
+                                                <input type="number" name="quantity" class="form-control" 
                                                        value="1" min="1" max="10">
                                             </div>
                                             <button type="submit" class="btn btn-primary">🍯 먹이기</button>
@@ -291,7 +298,7 @@
                                     <div class="card-body">
                                         <p class="text-muted">누렁이가 소화를 잘 못할 때 사용하세요</p>
                                         <form th:action="@{/admin/nuryeong/vomit}" method="post">
-                                            <button type="submit" class="btn btn-warning"
+                                            <button type="submit" class="btn btn-warning" 
                                                     onclick="return confirm('정말 강제로 토해내시겠어요?')">
                                                 🤮 강제 토해내기
                                             </button>
@@ -301,12 +308,13 @@
                             </div>
                         </div>
 
+                        <!-- 토해내기 로그 -->
                         <div class="card">
                             <div class="card-header">
                                 <h5>📋 토해내기 로그</h5>
                             </div>
                             <div class="card-body">
-                                <div th:if="${vomitLogs != null and not #lists.isEmpty(vomitLogs)}" class="table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-sm">
                                         <thead>
                                             <tr>
@@ -317,14 +325,13 @@
                                         </thead>
                                         <tbody>
                                             <tr th:each="log : ${vomitLogs}">
-                                                <td th:text="${log?.timestamp != null} ? ${#temporals.format(log.timestamp, 'MM-dd HH:mm')} : '시간 없음'">09-20 14:30</td>
-                                                <td th:text="${log?.productCount != null} ? ${log.productCount} + '개' : '0개'">3개</td>
-                                                <td th:text="${log?.status}">성공</td>
+                                                <td th:text="${#temporals.format(log.timestamp, 'MM-dd HH:mm')}">09-20 14:30</td>
+                                                <td th:text="${log.productCount} + '개'">3개</td>
+                                                <td th:text="${log.status}">성공</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <p th:if="${vomitLogs == null or #lists.isEmpty(vomitLogs)}" class="text-muted text-center">토해내기 기록이 없습니다.</p>
                             </div>
                         </div>
                     </div>
