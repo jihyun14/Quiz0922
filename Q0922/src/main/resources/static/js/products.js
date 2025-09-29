@@ -43,6 +43,7 @@ class ProductList {
     initializeFilters() {
         // 검색 입력 이벤트 (ID: searchInput)
         const searchInput = document.getElementById('searchInput'); // ✨ 수정: 'search-input' -> 'searchInput'
+
         if (searchInput) {
             let debounceTimer;
             searchInput.addEventListener('input', (e) => {
@@ -53,6 +54,7 @@ class ProductList {
                 }, 500);
             });
         }
+
 
         // 카테고리 필터 (ID: memoryTypeFilter)
         const categorySelect = document.getElementById('memoryTypeFilter'); // ✨ 수정: 'category-filter' -> 'memoryTypeFilter'
@@ -103,18 +105,21 @@ class ProductList {
             // ID 수정 반영
             const categorySelect = document.getElementById('memoryTypeFilter');
             if (categorySelect) categorySelect.value = this.currentFilters.category;
+
         }
 
         if (urlParams.get('search')) {
             this.currentFilters.search = urlParams.get('search');
             // ID 수정 반영
             const searchInput = document.getElementById('searchInput'); 
+
             if (searchInput) searchInput.value = this.currentFilters.search;
         }
     }
 
     // 상품 목록 로드
     async loadProducts() {
+
         const loadingIndicator = document.getElementById('loadingIndicator'); // HTML ID에 맞춤
         
         if (loadingIndicator) loadingIndicator.style.display = 'block';
@@ -148,6 +153,7 @@ class ProductList {
         } catch (error) {
             console.error('상품 로드 실패:', error);
             this.showError('상품을 불러오는데 실패했습니다. 서버 또는 네트워크 연결을 확인해주세요.');
+
         } finally {
             if (loadingIndicator) loadingIndicator.style.display = 'none';
         }
@@ -155,6 +161,7 @@ class ProductList {
 
     // 상품 목록 렌더링
     renderProducts(products) {
+
         // ✨ 결정적인 수정: products-container 대신 HTML의 'productsGrid' 사용
         const container = document.getElementById('productsGrid'); 
         const emptyState = document.getElementById('emptyState');
@@ -167,10 +174,12 @@ class ProductList {
 
         if (products.length === 0) {
             container.style.display = 'none';
+
             if (emptyState) emptyState.style.display = 'block';
             if (loadMoreContainer) loadMoreContainer.style.display = 'none';
             return;
         }
+
         
         // 데이터가 있을 경우
         container.style.display = 'grid'; // 그리드 레이아웃 표시
@@ -233,10 +242,12 @@ class ProductList {
     // 검색 결과 개수 업데이트 (ID: resultsCount)
     updateResultsCount(totalCount) {
         const countElement = document.getElementById('resultsCount'); // ✨ 수정: 'results-count' -> 'resultsCount'
+
         if (countElement) {
             countElement.textContent = `총 ${totalCount}개의 기억`;
         }
     }
+
 
     // 페이지네이션 업데이트
     updatePagination(currentPage, totalPages) {
@@ -279,10 +290,12 @@ class ProductList {
         
         // UI 초기화
         const filterElements = ['memoryTypeFilter', 'priceFilter', 'ownerFilter', 'searchInput']; // ✨ ID 수정 반영
+
         filterElements.forEach(id => {
             const element = document.getElementById(id);
             if (element) element.value = '';
         });
+
 
         // 감정 강도 필터 초기화
         const emotionRange = document.getElementById('emotionFilter');
@@ -290,10 +303,10 @@ class ProductList {
         if (emotionRange) emotionRange.value = '5';
         if (emotionDisplay) emotionDisplay.textContent = '5 이상';
 
-
         this.currentPage = 1;
         this.loadProducts();
     }
+
 
     // 에러 메시지 표시
     showError(message) {
@@ -349,7 +362,6 @@ function updateEmotionDisplay(value) {
     const emotionDisplay = document.getElementById('emotionDisplay');
     if(emotionDisplay) emotionDisplay.textContent = `${value} 이상`;
 }
-// TODO: addToCart, viewProductDetail, closeProductModal 등 HTML에서 사용하는 다른 함수들도 필요합니다.
 
 // DOM 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
