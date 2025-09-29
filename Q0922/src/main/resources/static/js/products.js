@@ -11,13 +11,14 @@ class ProductList {
         this.currentSort = 'newest';
         this.currentPage = 1;
         this.pageSize = 12;
-
         this.initializeFilters();
     }
 
     // 필터 초기화
     initializeFilters() {
+
         const searchInput = document.getElementById('searchInput');
+
         if (searchInput) {
             let debounceTimer;
             searchInput.addEventListener('input', (e) => {
@@ -75,6 +76,7 @@ class ProductList {
             });
         }
 
+        // URL 파라미터에서 초기 필터 설정
         this.setFiltersFromURL();
     }
 
@@ -86,20 +88,23 @@ class ProductList {
             this.currentFilters.memoryType = urlParams.get('memoryType');
             const memoryTypeSelect = document.getElementById('memoryTypeFilter');
             if (memoryTypeSelect) memoryTypeSelect.value = this.currentFilters.memoryType;
+
         }
 
         if (urlParams.get('search')) {
             this.currentFilters.search = urlParams.get('search');
             const searchInput = document.getElementById('searchInput');
+
             if (searchInput) searchInput.value = this.currentFilters.search;
         }
     }
 
     // 상품 목록 로드
     async loadProducts() {
+
         const loadingIndicator = document.getElementById('loadingIndicator');
         const productsGrid = document.getElementById('productsGrid'); // HTML ID에 맞게 수정
-
+      
         if (loadingIndicator) loadingIndicator.style.display = 'block';
 
         try {
@@ -128,6 +133,7 @@ class ProductList {
 
     // 상품 목록 렌더링
     renderProducts(products) {
+
         const container = document.getElementById('productsGrid'); // HTML ID에 맞게 수정
         if (!container) return;
         
@@ -183,6 +189,7 @@ class ProductList {
     // 검색 결과 개수 업데이트
     updateResultsCount(totalCount) {
         const countElement = document.getElementById('resultsCount'); // HTML ID에 맞게 수정
+
         if (countElement) {
             countElement.textContent = `총 ${totalCount}개의 기억`;
         }
@@ -216,10 +223,12 @@ class ProductList {
         };
         
         const filterElements = ['memoryTypeFilter', 'priceFilter', 'ownerFilter', 'searchInput'];
+
         filterElements.forEach(id => {
             const element = document.getElementById(id);
             if (element) element.value = '';
         });
+
         
         const emotionRange = document.getElementById('emotionFilter');
         if (emotionRange) emotionRange.value = 5;
@@ -227,6 +236,7 @@ class ProductList {
         this.currentPage = 1;
         this.loadProducts();
     }
+
 }
 
 // 전역 상품 목록 인스턴스
