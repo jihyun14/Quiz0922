@@ -18,8 +18,8 @@
                 </div>
                 
                 <nav class="main-nav">
-					<a href="/index" class="nav-link active">홈</a>
-                    <a href="/products" class="nav-link">상품</a>
+                    <a href="/index" class="nav-link">홈</a>
+                    <a href="/products" class="nav-link active">상품</a>
                     <a href="/memory" class="nav-link">기억 토해내기</a>
                     <a href="/cart" class="nav-link">
                         <span class="cart-icon">🛒</span>
@@ -33,8 +33,8 @@
                         <button onclick="logout()" class="logout-btn">로그아웃</button>
                     </div>
                     <div class="auth-buttons" id="authButtons">
-                        <a href="login.html" class="btn btn-outline">로그인</a>
-                        <a href="register.html" class="btn btn-primary">회원가입</a>
+                        <a href="/login" class="btn btn-outline">로그인</a>
+                        <a href="/register" class="btn btn-primary">회원가입</a>
                     </div>
                 </div>
             </div>
@@ -211,14 +211,14 @@
 
     <script src="js/memory-treasures.js"></script>
     <script src="js/products.js"></script>
-    <script>
+    <!--script>
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            checkUserLogin();
-            loadProducts();
+           // checkUserLogin();
+           // loadProducts();
             loadRecommendations();
             initializeFilters();
         });
-    </script>
+    </script-->
 </body>
 </html>
