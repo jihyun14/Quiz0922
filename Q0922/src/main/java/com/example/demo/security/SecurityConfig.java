@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.security;
+package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-import com.memory.treasures.demo.user.AppUserService;
+import com.example.demo.user.AppUserService;
 
 import lombok.RequiredArgsConstructor;
 

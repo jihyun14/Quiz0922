@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.user;
+package com.example.demo.user;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.memory.treasures.demo.security.TokenResponse;
+import com.example.demo.security.TokenResponse;
 
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.Cookie;
@@ -40,30 +40,30 @@ public class AppUserApiController {
 	public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest,  HttpServletResponse response){
 		TokenResponse tokens = this.appUserService.loginUser(loginRequest);
 		// 3. Access Token을 HttpOnly 쿠키에 담아 응답에 추가
-        sendAccessTokenAsCookie(response, tokens.getAccessToken());
+       // sendAccessTokenAsCookie(response, tokens.getAccessToken());
 		return ResponseEntity.ok(Map.of("status", "success", "message", "로그인 성공", "tokens" , tokens));
 	}
 	
-	private void sendAccessTokenAsCookie(HttpServletResponse response, String accessToken) {
-		 // 1. HttpOnly Cookie 생성
-	    Cookie cookie = new Cookie("accessToken", accessToken);
-	    
-	    // 2. HTTP 요청 시 자동으로 포함되도록 경로 설정
-	    cookie.setPath("/"); 
-	    
-	    // 3. JS에서 접근 불가능하게 설정 (XSS 방어)
-	    cookie.setHttpOnly(true); 
-	    
-	    // 4. HTTPS 환경에서만 전송되도록 설정 (권장, 배포 환경 필수)
-	    // cookie.setSecure(true); 
-	    
-	    // 5. 쿠키 만료 시간 설정 (토큰 만료 시간과 동일하게)
-	    cookie.setMaxAge( (int) (60 * 60 * 1000L)); 
-
-	    // 6. 응답에 쿠키 추가
-	    response.addCookie(cookie);
-		
-	}
+//	private void sendAccessTokenAsCookie(HttpServletResponse response, String accessToken) {
+//		 // 1. HttpOnly Cookie 생성
+//	    Cookie cookie = new Cookie("accessToken", accessToken);
+//	    
+//	    // 2. HTTP 요청 시 자동으로 포함되도록 경로 설정
+//	    cookie.setPath("/"); 
+//	    
+//	    // 3. JS에서 접근 불가능하게 설정 (XSS 방어)
+//	    cookie.setHttpOnly(true); 
+//	    
+//	    // 4. HTTPS 환경에서만 전송되도록 설정 (권장, 배포 환경 필수)
+//	    // cookie.setSecure(true); 
+//	    
+//	    // 5. 쿠키 만료 시간 설정 (토큰 만료 시간과 동일하게)
+//	    cookie.setMaxAge( (int) (60 * 60 * 1000L)); 
+//
+//	    // 6. 응답에 쿠키 추가
+//	    response.addCookie(cookie);
+//		
+//	}
 
 	// 새로운 AccessToken 발급하기 위함 
 	@PostMapping("/refresh")
@@ -71,6 +71,7 @@ public class AppUserApiController {
 		String refrehToken = body.get("refreshToken");
 		return ResponseEntity.ok(this.appUserService.newAccessToken(refrehToken));
 	}
+	
 	
 	@GetMapping("/profile")
 	public ResponseEntity<AppUser> getUserProfile(Authentication authentication){
@@ -80,17 +81,17 @@ public class AppUserApiController {
 	}
 	
 	// AuthController.java 또는 별도 LogoutController
-	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletResponse response) {
-	    // access_token 쿠키를 만료시켜 제거
-	    Cookie cookie = new Cookie("accessToken", null);
-	    cookie.setMaxAge(0); // 만료 시간을 0으로 설정
-	    cookie.setPath("/");
-	    cookie.setHttpOnly(true); 
-	    // cookie.setSecure(true); // HTTPS 환경 시
-	    response.addCookie(cookie);
-	    return ResponseEntity.ok("로그아웃 성공");
-	}
+//	@PostMapping("/logout")
+//	public ResponseEntity<?> logout(HttpServletResponse response) {
+//	    // access_token 쿠키를 만료시켜 제거
+//	    Cookie cookie = new Cookie("accessToken", null);
+//	    cookie.setMaxAge(0); // 만료 시간을 0으로 설정
+//	    cookie.setPath("/");
+//	    cookie.setHttpOnly(true); 
+//	    // cookie.setSecure(true); // HTTPS 환경 시
+//	    response.addCookie(cookie);
+//	    return ResponseEntity.ok("로그아웃 성공");
+//	}
 	
 	
 }

@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.security;
+package com.example.demo.security;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.memory.treasures.demo.user.AppUser;
-import com.memory.treasures.demo.user.AppUserRepository;
+import com.example.demo.user.AppUser;
+import com.example.demo.user.AppUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,10 +42,10 @@ public class AppUserDetailService implements UserDetailsService{
 	// 사용자 권한 목록 생성
 	private Collection<GrantedAuthority> getAuthorities(AppUser user){
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		if(user.getRole().equals(com.memory.treasures.demo.user.UserRole.ADMIN)) {
-			authorities.add(new SimpleGrantedAuthority(com.memory.treasures.demo.user.UserRole.ADMIN.getAuthority()));
+		if(user.getRole().equals(com.example.demo.user.UserRole.ADMIN)) {
+			authorities.add(new SimpleGrantedAuthority(com.example.demo.user.UserRole.ADMIN.getAuthority()));
 		} else {
-			authorities.add(new SimpleGrantedAuthority(com.memory.treasures.demo.user.UserRole.USER.getAuthority()));
+			authorities.add(new SimpleGrantedAuthority(com.example.demo.user.UserRole.USER.getAuthority()));
 		}
 		return authorities;
 	} 

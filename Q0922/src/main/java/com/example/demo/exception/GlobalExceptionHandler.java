@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.exception;
+package com.example.demo.exception;
 
 import java.util.HashMap;
 import java.util.Map;

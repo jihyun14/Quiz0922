@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.user;
+package com.example.demo.user;
 
 import org.springframework.security.core.GrantedAuthority;
 

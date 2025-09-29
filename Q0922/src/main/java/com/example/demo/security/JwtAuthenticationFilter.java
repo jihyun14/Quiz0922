@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.security;
+package com.example.demo.security;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.memory.treasures.demo.user.AppUserService;
+import com.example.demo.user.AppUserService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -59,7 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		String jwt = resolveToken(request);
 	
 		if(StringUtils.hasText(jwt)) {
-			 logger.info("JWT 없거나 유효하지 않음: {}", request.getRequestURI());
 			if(this.jwtTokenProvider.validateToken(jwt)) {
 				Authentication auth = this.jwtTokenProvider.getAuthentication(jwt);
 				SecurityContextHolder.getContext().setAuthentication(auth);
