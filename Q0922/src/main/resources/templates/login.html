@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 - Memory Treasures</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="bg-light">
     <div class="container">
@@ -19,45 +19,40 @@
                             <h2 class="card-title text-primary">Memory Treasures</h2>
                             <p class="text-muted">기억 속 보물상자에 오신 걸 환영해요!</p>
                         </div>
-
-                        <!-- 에러 메시지 -->
-                        <div th:if="${error}" class="alert alert-danger" role="alert">
-                            🐱 급하냥: "아이고! 아이디나 비밀번호가 틀렸네요! 빨리빨리 다시 해보세요!"
-                        </div>
-
-                        <!-- 로그아웃 메시지 -->
-                        <div th:if="${logout}" class="alert alert-success" role="alert">
-                            🐕 누렁이: "안전하게 로그아웃되었어요! 기억은... 맛있었어요!"
-                        </div>
-
-                        <!-- 로그인 폼 -->
-                        <form th:action="@{/login}" method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">🆔 아이디</label>
-                                <input type="text" class="form-control" id="username" name="username" 
-                                       placeholder="사용자 아이디를 입력하세요" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">🔐 비밀번호</label>
-                                <input type="password" class="form-control" id="password" name="password" 
-                                       placeholder="비밀번호를 입력하세요" required>
-                            </div>
-                            
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                                <label class="form-check-label" for="remember-me">로그인 상태 유지</label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100 mb-3">
-                                🚀 로그인하기
-                            </button>
-                        </form>
-
+						
+                    
+						<div id="error-message" class="alert alert-danger" style="display:none;"></div>
+						<div id="logout-message" class="alert alert-success" style="display:none;"></div>
+						
+                   
+						<form id ="login-form">
+                           <div class="mb-3">
+                               <label for="username" class="form-label">🆔 아이디</label>
+                               <input type="text" class="form-control" id="username" name="username" 
+                                      placeholder="사용자 아이디를 입력하세요" required>
+                           </div>
+                           
+                           <div class="mb-3">
+                               <label for="password" class="form-label">🔐 비밀번호</label>
+                               <input type="password" class="form-control" id="password" name="password" 
+                                      placeholder="비밀번호를 입력하세요" required>
+                           </div>
+                           
+                           <div class="mb-3 form-check">
+                               <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                               <label class="form-check-label" for="remember-me">로그인 상태 유지</label>
+                           </div>
+                           
+                           <button type="submit" class="btn btn-primary w-100 mb-3">
+                               🚀 로그인하기
+                           </button>
+                       </form>
+											   
+											   
                         <!-- 회원가입 링크 -->
                         <div class="text-center">
                             <p class="mb-0">아직 계정이 없나요? 
-                                <a th:href="@{/register}" class="text-primary">회원가입</a>
+                                <a th:href="@{/signup}" class="text-primary">회원가입</a>
                             </p>
                             <a th:href="@{/}" class="text-muted">🏠 홈으로</a>
                         </div>
@@ -72,4 +67,53 @@
         </div>
     </div>
 </body>
+
+<script type="module">
+		import { TokenManager } from './js/token.js';
+		import { tokenApi } from './js/tokenApi.js';
+		window.addEventListener("load", () => {
+		    const params = new URLSearchParams(window.location.search);
+		    if(params.get("logout") === "true") {
+				TokenManager.clearTokens();
+		        const logoutDiv = document.getElementById("logout-message");
+		        logoutDiv.innerText = "🐕 누렁이: 안전하게 로그아웃되었어요! 기억은... 맛있었어요!";
+		        logoutDiv.style.display = "block";
+		    }
+		});  
+		
+		// 로그인 처리 
+		document.getElementById("login-form").addEventListener("submit", async function(e) {
+		       e.preventDefault();
+		       const username = document.getElementById("username").value;
+		       const password = document.getElementById("password").value;
+			   const rememberMe = document.getElementById("remember-me").checked;
+			   
+		       try {
+		           const response = await fetch('/api/auth/login', {
+		               method: 'POST',
+		               headers: {'Content-Type': 'application/json'},
+		               body: JSON.stringify({username, password, rememberMe})
+		           });
+
+		           const data = await response.json();
+
+		           if (!response.ok) {
+		               const errorDiv = document.getElementById("error-message");
+		               errorDiv.innerText = "🐱 급하냥: 아이고! 아이디나 비밀번호가 틀렸네요! 빨리빨리 다시 해보세요!";
+		               errorDiv.style.display = "block";
+		           } else {
+		              // JWT 저장					
+					 	TokenManager.setTokens(data.tokens.accessToken, data.tokens.refreshToken, rememberMe);
+		               // 홈으로 이동
+		               window.location.href = '/user-profile';
+		           }
+		       } catch (err) {
+		           console.error(err);
+		           const errorDiv = document.getElementById("error-message");
+		           errorDiv.innerText = "서버 오류 발생!";
+		           errorDiv.style.display = "block";
+		       }
+		   });
+
+</script>
 </html>
