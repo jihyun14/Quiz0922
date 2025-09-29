@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.user;
+package com.example.demo.user;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.memory.treasures.demo.exception.LoginFailedException;
-import com.memory.treasures.demo.exception.NotAuthenticatedException;
-import com.memory.treasures.demo.exception.SignupValidationException;
-import com.memory.treasures.demo.exception.TokenValidationException;
-import com.memory.treasures.demo.security.JwtTokenProvider;
-import com.memory.treasures.demo.security.TokenResponse;
+import com.example.demo.exception.LoginFailedException;
+import com.example.demo.exception.NotAuthenticatedException;
+import com.example.demo.exception.SignupValidationException;
+import com.example.demo.exception.TokenValidationException;
+import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.security.TokenResponse;
 
 import lombok.RequiredArgsConstructor;
 

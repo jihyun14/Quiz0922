@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.security;
+package com.example.demo.security;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -22,7 +22,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.security;
+package com.example.demo.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

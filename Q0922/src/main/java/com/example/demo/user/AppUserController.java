@@ -1,4 +1,4 @@
-package com.memory.treasures.demo.user;
+package com.example.demo.user;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
